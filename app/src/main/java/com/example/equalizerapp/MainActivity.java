@@ -2,7 +2,9 @@ package com.example.equalizerapp;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
+import android.media.audiofx.LoudnessEnhancer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
     private Equalizer mEqualizer;
+    private BassBoost mBassBoost;
+    private LoudnessEnhancer mLoudness;
 
     private LinearLayout mLinearLayout;
     private TextView mStatusTextView;
@@ -178,6 +182,20 @@ public class MainActivity extends AppCompatActivity {
 
             mEqualizer = new Equalizer(0, sessionId);
             mEqualizer.setEnabled(true);
+
+            try {
+                mBassBoost = new BassBoost(0, sessionId);
+                if (mBassBoost.getStrengthSupported()) {
+                    mBassBoost.setEnabled(true);
+                    mBassBoost.setStrength((short) 800);
+                }
+            } catch (RuntimeException ignored) {}
+
+            try {
+                mLoudness = new LoudnessEnhancer(sessionId);
+                mLoudness.setTargetGain(600);
+                mLoudness.setEnabled(true);
+            } catch (RuntimeException ignored) {}
 
             short numBands = mEqualizer.getNumberOfBands();
             short[] levelRange =
@@ -344,6 +362,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void releaseAudio() {
+
+        if (mBassBoost != null) {
+            mBassBoost.release();
+            mBassBoost = null;
+        }
+
+        if (mLoudness != null) {
+            mLoudness.release();
+            mLoudness = null;
+        }
 
         if (mEqualizer != null) {
             mEqualizer.release();
