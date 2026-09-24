@@ -187,13 +187,13 @@ public class MainActivity extends AppCompatActivity {
                 mBassBoost = new BassBoost(0, sessionId);
                 if (mBassBoost.getStrengthSupported()) {
                     mBassBoost.setEnabled(true);
-                    mBassBoost.setStrength((short) 800);
+                    mBassBoost.setStrength((short) 500);
                 }
             } catch (RuntimeException ignored) {}
 
             try {
                 mLoudness = new LoudnessEnhancer(sessionId);
-                mLoudness.setTargetGain(600);
+                mLoudness.setTargetGain(300);
                 mLoudness.setEnabled(true);
             } catch (RuntimeException ignored) {}
 
